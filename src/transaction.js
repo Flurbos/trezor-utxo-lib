@@ -49,6 +49,7 @@ function Transaction (network = networks.bitcoin) {
   }
 }
 
+Transaction.USE_STRING_VALUES = false
 Transaction.DEFAULT_SEQUENCE = 0xffffffff
 Transaction.SIGHASH_ALL = 0x01
 Transaction.SIGHASH_NONE = 0x02
@@ -291,10 +292,9 @@ Transaction.fromBuffer = function (buffer, network = networks.bitcoin, __noStric
   }
 
   var voutLen = readVarInt()
-  var isDogeCoin = coins.isDoge(network)
   for (i = 0; i < voutLen; ++i) {
     tx.outs.push({
-      value: isDogeCoin ? readUInt64LEasString() : readUInt64(),
+      value: Transaction.USE_STRING_VALUES ? readUInt64LEasString() : readUInt64(),
       script: readVarSlice()
     })
   }
@@ -1015,9 +1015,8 @@ Transaction.prototype.__toBuffer = function (buffer, initialOffset, __allowWitne
   })
 
   writeVarInt(this.outs.length)
-  var isDogeCoin = coins.isDoge(this.network)
   this.outs.forEach(function (txOut) {
-    if (isDogeCoin) {
+    if (Transaction.USE_STRING_VALUES) {
       writeUInt64asString(txOut.value)
     } else if (!txOut.valueBuffer) {
       writeUInt64(txOut.value)
