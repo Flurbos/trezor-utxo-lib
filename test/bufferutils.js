@@ -77,6 +77,24 @@ describe('bufferutils', function () {
     })
   })
 
+  describe('readUInt64LEasString', function () {
+    fixtures.valid.forEach(function (f) {
+      it('decodes ' + f.hex64 + ' correctly', function () {
+        var buffer = Buffer.from(f.hex64, 'hex')
+        var string = bufferutils.readUInt64LEasString(buffer, 0)
+        assert.strictEqual(string, f.dec.toString())
+      })
+    })
+
+    fixtures.readUInt64LEasString.valid.forEach(function (f) {
+      it('decodes ' + f.description + ' correctly', function () {
+        var buffer = Buffer.from(f.hex64, 'hex')
+        var string = bufferutils.readUInt64LEasString(buffer, 0)
+        assert.strictEqual(string, f.dec.toString())
+      })
+    })
+  })
+
   describe('readVarInt', function () {
     fixtures.valid.forEach(function (f) {
       it('decodes ' + f.hexVI + ' correctly', function () {
