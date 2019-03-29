@@ -21,10 +21,13 @@ function readUInt64LE (buffer, offset) {
 }
 
 function readUInt64LEasString (buffer, offset) {
-  var a = new BigInteger(buffer.readUInt32LE(offset).toString())
-  var b = new BigInteger(buffer.readUInt32LE(offset + 4).toString())
+  var aUint = buffer.readUInt32LE(offset)
+  var bUint = buffer.readUInt32LE(offset + 4)
+  verifuint(aUint + bUint, Infinity)
   var m = new BigInteger(Number(0x100000000).toString())
-  return a.add(b.multiply(m)).toString()
+  var a = new BigInteger(aUint.toString())
+  var b = new BigInteger(bUint.toString()).multiply(m)
+  return a.add(b).toString()
 }
 
 function readInt64LE (buffer, offset) {
